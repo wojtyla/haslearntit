@@ -18,7 +18,7 @@ import java.util.Collections;
 
 import static org.springframework.util.Assert.hasText;
 
-public class CassandraKeyspaceManager {
+class CassandraKeyspaceManager {
     public static void ensureKeyspace(Cluster cluster, final String keyspace) throws Exception {
         hasText(keyspace);
         KeyspaceManager keyspaceManager = Pelops.createKeyspaceManager(cluster);
