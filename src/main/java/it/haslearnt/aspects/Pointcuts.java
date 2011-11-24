@@ -10,6 +10,6 @@ import org.aspectj.lang.annotation.Pointcut;
 
 @Aspect
 public class Pointcuts {
-    @Pointcut("execution(public * it.haslearnt.*..*.*(..)) && !execution(public * it.haslearnt.*..*Dto.*(..)) && !execution(public * it.haslearnt..*..*.set*(..))\"")
+    @Pointcut("execution(public * it.haslearnt.*..*.*(..)) && !execution(public * it.haslearnt.*..*Dto.*(..)) && !execution(public * it.haslearnt..*..*.set*(..))")
     public void  allPublicMethodsExceptSettersAndDtos() {}
 }

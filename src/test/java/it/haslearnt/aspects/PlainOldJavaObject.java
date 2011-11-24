@@ -6,16 +6,9 @@
 package it.haslearnt.aspects;
 
 class PlainOldJavaObject {
-    private String string;
-
     public void wouldYouDareToPassMeANull(String supposedToBeNull) {
     }
 
     public void setString(String string) {
-        this.string = string;
-    }
-
-    public String getString() {
-        return string;
     }
 }
