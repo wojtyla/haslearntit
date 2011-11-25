@@ -4,6 +4,7 @@
 <head><title>Agile Development Day 2011</title></head>
 <body>
 <h1>Welcome to Agile Development Day 2011 application stub!</h1>
+Just to see if jenkins automatic deployment works...
 
 <p>Write performance: <c:out value="${writeSpeed}"/> elements/sec</p>
 <p>Read performance: <c:out value="${readSpeed}"/> elements/sec</p>
