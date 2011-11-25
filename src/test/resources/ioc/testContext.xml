@@ -3,6 +3,11 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean id="plainOldJavaObject" class="it.haslearnt.aspects.PlainOldJavaObject"/>
+    <bean id="simpleDto" class="it.haslearnt.aspects.SimpleDto"/>
+
+    <!-- embedded cassandra -->
+
     <bean id="cassandraStarter" class="setup.EmbeddedCassandraStarter">
         <constructor-arg index="0">
             <bean id="cassandraDataCleaner" class="setup.CassandraDataCleaner"/>

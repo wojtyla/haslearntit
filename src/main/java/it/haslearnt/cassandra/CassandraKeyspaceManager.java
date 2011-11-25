@@ -16,8 +16,11 @@ import org.scale7.cassandra.pelops.Pelops;
 
 import java.util.Collections;
 
-public class CassandraKeyspaceManager {
+import static org.springframework.util.Assert.hasText;
+
+class CassandraKeyspaceManager {
     public static void ensureKeyspace(Cluster cluster, final String keyspace) throws Exception {
+        hasText(keyspace);
         KeyspaceManager keyspaceManager = Pelops.createKeyspaceManager(cluster);
         if (hasNoMatchingKeyspaces(keyspace, keyspaceManager)) {
             KsDef ksDef = new KsDef(keyspace, "org.apache.cassandra.locator.SimpleStrategy", Collections.<CfDef>emptyList());

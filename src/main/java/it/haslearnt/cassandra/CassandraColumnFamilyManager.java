@@ -14,9 +14,12 @@ import org.scale7.cassandra.pelops.ColumnFamilyManager;
 import org.scale7.cassandra.pelops.KeyspaceManager;
 import org.scale7.cassandra.pelops.Pelops;
 
+import static org.springframework.util.Assert.hasText;
+
 public class CassandraColumnFamilyManager {
 
     public static void recreateColumnFamily(Cluster cluster, String keyspace, final String columnFamily, String comparator) throws Exception {
+        hasText(keyspace); hasText(columnFamily); hasText(comparator);
         boolean hasMatchingColumnFamilies = hasMatchingColumnFamilies(columnFamily, cluster, keyspace);
         ColumnFamilyManager columnFamilyManager = Pelops.createColumnFamilyManager(cluster, keyspace);
         if (hasMatchingColumnFamilies) {
@@ -28,6 +31,7 @@ public class CassandraColumnFamilyManager {
     }
 
     public static void addColumnFamilyIfNeeded(Cluster cluster, String keyspace, final String columnFamily, String comparator) throws Exception {
+        hasText(keyspace); hasText(columnFamily); hasText(comparator);
         boolean hasMatchingColumnFamilies = hasMatchingColumnFamilies(columnFamily, cluster, keyspace);
         ColumnFamilyManager columnFamilyManager = Pelops.createColumnFamilyManager(cluster, keyspace);
         if (!hasMatchingColumnFamilies) {
@@ -43,6 +47,7 @@ public class CassandraColumnFamilyManager {
 
 
     public static void cleanColumnFamilies(Cluster cluster, String keyspace) throws Exception {
+        hasText(keyspace);
         KeyspaceManager keyspaceManager = Pelops.createKeyspaceManager(cluster);
         ColumnFamilyManager columnFamilyManager = Pelops.createColumnFamilyManager(cluster, keyspace);
         KsDef ksDef = keyspaceManager.getKeyspaceSchema(keyspace);

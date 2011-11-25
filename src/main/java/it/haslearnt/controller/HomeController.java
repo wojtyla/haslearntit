@@ -23,6 +23,7 @@ public class HomeController {
     @Autowired
     private IThriftPool pool;
 
+    //TODO: get it out or make it shine
     @RequestMapping("/")
     public String home(Model model) {
         Long t0 = System.currentTimeMillis();
