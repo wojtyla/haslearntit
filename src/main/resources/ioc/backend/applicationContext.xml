@@ -9,7 +9,10 @@
            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <ctx:component-scan base-package="it.haslearnt" annotation-config="true"/>
+    <ctx:component-scan base-package="it.haslearnt" annotation-config="true">
+        <!-- TODO: MZA: Required to not initialize controllers in backend - web subpackage should be useful -->
+        <ctx:exclude-filter type="regex" expression="it\.haslearnt\.controller.*"/>
+    </ctx:component-scan>
 
     <util:properties id="cassandraProperties" location="classpath:cassandra.properties" />
 

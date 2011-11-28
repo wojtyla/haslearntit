@@ -8,5 +8,9 @@ Just to see if jenkins automatic deployment really works...
 
 <p>Write performance: <c:out value="${writeSpeed}"/> elements/sec</p>
 <p>Read performance: <c:out value="${readSpeed}"/> elements/sec</p>
+
+<hr />
+<!-- TODO: MZA: Should be moved to the footer -->
+<p><c:out value="${appInfoText}"/></p>
 </body>
 </html>

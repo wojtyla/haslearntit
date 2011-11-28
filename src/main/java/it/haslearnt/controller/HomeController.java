@@ -11,6 +11,7 @@ import org.scale7.cassandra.pelops.Mutator;
 import org.scale7.cassandra.pelops.Selector;
 import org.scale7.cassandra.pelops.pool.IThriftPool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,10 @@ public class HomeController {
 
     @Autowired
     private IThriftPool pool;
+    
+    @Autowired
+    @Qualifier("appInfoText")
+    private String appInfoText;
 
     //TODO: get it out or make it shine
     @RequestMapping("/")
@@ -49,6 +54,9 @@ public class HomeController {
 
         model.addAttribute("writeSpeed", 20000000 / writeTime);
         model.addAttribute("readSpeed", 20000000 / readTime);
+
+        //TODO: MZA: Should be moved to the footer
+        model.addAttribute("appInfoText", appInfoText);
 
         return "home";
     }
