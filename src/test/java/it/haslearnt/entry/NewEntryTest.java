@@ -20,7 +20,7 @@ public class NewEntryTest extends IntegrationTest {
 		repository.save(entry);
 
 		assertNotNull(entry.id());
-		Entry fetchedEntry = repository.fetchEntry(entry.id());
+		Entry fetchedEntry = repository.load(entry.id());
 		assertNotNull(fetchedEntry);
 		assertEquals("something", fetchedEntry.what());
 		assertEquals("today", fetchedEntry.when());
