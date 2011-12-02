@@ -44,4 +44,7 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
+    <!-- repositories -->
+    <bean id="userRepository" class="it.haslearnt.repositories.UserRepository"/>
+
 </beans>

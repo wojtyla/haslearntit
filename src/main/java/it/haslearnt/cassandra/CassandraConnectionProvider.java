@@ -16,8 +16,10 @@ public class CassandraConnectionProvider extends CommonsBackedPoolFactoryBean {
         CassandraKeyspaceManager.ensureKeyspace(getCluster(), getKeyspace());
         if(clean) {
             CassandraColumnFamilyManager.recreateColumnFamily(getCluster(), getKeyspace(), "Notes", "LongType");
+            CassandraColumnFamilyManager.recreateColumnFamily(getCluster(), getKeyspace(), CassandraColumnFamilies.USERS, "UTF8Type");
         } else {
             CassandraColumnFamilyManager.addColumnFamilyIfNeeded(getCluster(), getKeyspace(), "Notes", "LongType");
+            CassandraColumnFamilyManager.addColumnFamilyIfNeeded(getCluster(), getKeyspace(), CassandraColumnFamilies.USERS, "UTF8Type");
         }
         super.afterPropertiesSet();
     }
