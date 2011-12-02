@@ -1,4 +1,4 @@
-package it.haslearnt.cassandra.mappings;
+package it.haslearnt.cassandra.mapping;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

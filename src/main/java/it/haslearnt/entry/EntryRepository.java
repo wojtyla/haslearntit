@@ -2,7 +2,7 @@ package it.haslearnt.entry;
 
 import static org.scale7.cassandra.pelops.Selector.getColumnStringName;
 import static org.scale7.cassandra.pelops.Selector.getColumnStringValue;
-import it.haslearnt.cassandra.mappings.Id;
+import it.haslearnt.cassandra.mapping.Id;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

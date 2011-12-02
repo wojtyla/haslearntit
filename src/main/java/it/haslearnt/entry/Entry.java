@@ -1,7 +1,7 @@
 package it.haslearnt.entry;
 
 import it.haslearnt.cassandra.mapping.Column;
-import it.haslearnt.cassandra.mappings.Id;
+import it.haslearnt.cassandra.mapping.Id;
 
 import org.scale7.cassandra.pelops.UuidHelper;
 
