@@ -52,4 +52,9 @@ public class Entry {
 		this.id = UuidHelper.newTimeUuid().toString();
 	}
 
+	public Entry withId(String entryId) {
+		this.id = entryId;
+		return this;
+	}
+
 }

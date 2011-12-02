@@ -4,6 +4,7 @@ import static org.scale7.cassandra.pelops.Selector.getColumnStringName;
 import static org.scale7.cassandra.pelops.Selector.getColumnStringValue;
 import it.haslearnt.cassandra.mappings.Id;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,21 +27,11 @@ public class EntryRepository {
 		Mutator mutator = pool.createMutator();
 		entry.generateId();
 
-		List<Column> columns = new LinkedList<Column>();
-		Object id = null;
+		Object id;
+		List<Column> columns;
 		try {
-			Field[] fields = Entry.class.getDeclaredFields();
-			for (Field field : fields) {
-				field.setAccessible(true);
-				if (field.isAnnotationPresent(Id.class))
-					id = field.get(entry);
-				else if (field.isAnnotationPresent(it.haslearnt.cassandra.mapping.Column.class)) {
-					columns.add(
-							mutator.newColumn(field.getAnnotation(it.haslearnt.cassandra.mapping.Column.class).value(), field.get(entry)
-									.toString())
-							);
-				}
-			}
+			id = idFromCassandraEntity(entry);
+			columns = columnsFromCassandraEntity(entry, mutator);
 		} catch (Exception e) {
 			throw new RuntimeException("Problem with Cassandra mapping", e);
 		}
@@ -50,19 +41,56 @@ public class EntryRepository {
 		mutator.execute(ConsistencyLevel.ONE);
 	}
 
+	private List<Column> columnsFromCassandraEntity(Entry entry, Mutator mutator) throws IllegalAccessException {
+		List<Column> columns = new LinkedList<Column>();
+		List<Field> result = getFieldsAnnotatedBy(it.haslearnt.cassandra.mapping.Column.class, Entry.class);
+		for (Field field : result) {
+			field.setAccessible(true);
+			columns.add(
+					mutator.newColumn(field.getAnnotation(it.haslearnt.cassandra.mapping.Column.class).value(), field.get(entry)
+							.toString())
+					);
+		}
+		return columns;
+	}
+
+	private List<Field> getFieldsAnnotatedBy(Class<? extends Annotation> annotation, Class<?> clazz) {
+		Field[] fields = clazz.getDeclaredFields();
+		List<Field> result = new LinkedList<Field>();
+		for (Field field : fields) {
+			if (field.isAnnotationPresent(annotation)) {
+				result.add(field);
+			}
+		}
+		return result;
+	}
+
+	private Object idFromCassandraEntity(Entry entry) throws IllegalAccessException {
+		for (Field field : getFieldsAnnotatedBy(Id.class, entry.getClass())) {
+			field.setAccessible(true);
+			return field.get(entry);
+		}
+		throw new RuntimeException("Entity has no id");
+	}
+
 	public Entry fetchEntry(String entryId) {
 		Selector selector = pool.createSelector();
 		List<Column> columns = selector.getColumnsFromRow("Entries", entryId, true, ConsistencyLevel.ONE);
 
-		Entry result = new Entry();
+		Entry result = new Entry().withId(entryId);
 
 		for (Column column : columns) {
-			if ("skill".equals(getColumnStringName(column)))
-				result.iveLearnt(getColumnStringValue(column));
-			else if ("when".equals(getColumnStringName(column)))
-				result.today();
-			else if ("difficulty".equals(getColumnStringName(column)))
-				result.andItWas(getColumnStringValue(column));
+			List<Field> entityColumns = getFieldsAnnotatedBy(it.haslearnt.cassandra.mapping.Column.class, Entry.class);
+
+			for (Field field : entityColumns) {
+				if (field.getAnnotation(it.haslearnt.cassandra.mapping.Column.class).value().equals(getColumnStringName(column)))
+					try {
+						field.setAccessible(true);
+						field.set(result, getColumnStringValue(column));
+					} catch (Exception e) {
+						throw new RuntimeException("Entity mapping problem for Entry field: " + field.getName(), e);
+					}
+			}
 		}
 
 		return result;
