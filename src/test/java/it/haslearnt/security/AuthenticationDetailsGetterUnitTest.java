@@ -5,6 +5,9 @@
 
 package it.haslearnt.security;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.BDDMockito.given;
 import it.haslearnt.user.User;
 import it.haslearnt.user.UserRepository;
 
@@ -15,43 +18,39 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.BDDMockito.given;
-
 @RunWith(MockitoJUnitRunner.class)
 public class AuthenticationDetailsGetterUnitTest {
 
-    @Mock
-    UserRepository userRepository;
+	@Mock
+	UserRepository userRepository;
 
-    String email = "email";
-    String hashedPassword = "oidjgs";
+	String email = "email";
+	String hashedPassword = "oidjgs";
 
-    @Test
-    public void shouldLoadUserByUsername() {
-        //given
-        AuthenticationDetailsGetter authenticationDetailsGetter = new AuthenticationDetailsGetter(userRepository);
-        User user = new User(email, hashedPassword);
-        given(userRepository.findByEmail(email)).willReturn(user);
+	@Test
+	public void shouldLoadUserByUsername() {
+		// given
+		AuthenticationDetailsGetter authenticationDetailsGetter = new AuthenticationDetailsGetter(userRepository);
+		User user = new User(email, hashedPassword);
+		given(userRepository.load(email)).willReturn(user);
 
-        //when
-        UserDetails userDetails = authenticationDetailsGetter.loadUserByUsername(email);
+		// when
+		UserDetails userDetails = authenticationDetailsGetter.loadUserByUsername(email);
 
-        //then
-        assertEquals(email, userDetails.getUsername());
-        assertEquals(hashedPassword, userDetails.getPassword());
-        assertTrue(userDetails.isEnabled());
-    }
+		// then
+		assertEquals(email, userDetails.getUsername());
+		assertEquals(hashedPassword, userDetails.getPassword());
+		assertTrue(userDetails.isEnabled());
+	}
 
-    @Test(expected = UsernameNotFoundException.class)
-    public void shouldThrowExceptionIfUserNotFound() {
-        //given
-        AuthenticationDetailsGetter authenticationDetailsGetter = new AuthenticationDetailsGetter(userRepository);
+	@Test(expected = UsernameNotFoundException.class)
+	public void shouldThrowExceptionIfUserNotFound() {
+		// given
+		AuthenticationDetailsGetter authenticationDetailsGetter = new AuthenticationDetailsGetter(userRepository);
 
-        //when
-        UserDetails userDetails = authenticationDetailsGetter.loadUserByUsername(email);
+		// when
+		UserDetails userDetails = authenticationDetailsGetter.loadUserByUsername(email);
 
-        //then exception is thrown
-    }
+		// then exception is thrown
+	}
 }

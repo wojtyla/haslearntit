@@ -5,6 +5,7 @@
 
 package it.haslearnt.security;
 
+import static org.springframework.util.Assert.notNull;
 import it.haslearnt.user.User;
 import it.haslearnt.user.UserRepository;
 
@@ -13,26 +14,24 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import static org.springframework.util.Assert.notNull;
-
 public class AuthenticationDetailsGetter implements UserDetailsService {
-    private UserRepository userRepository;
+	private UserRepository userRepository;
 
-    public AuthenticationDetailsGetter(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+	public AuthenticationDetailsGetter(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException, DataAccessException {
-        notNull(email);
-        User user = userRepository.findByEmail(email);
-        throwExceptionIfNotFound(user, email);
-        return new AuthenticationUserDetails(user);
-    }
+	@Override
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException, DataAccessException {
+		notNull(email);
+		User user = userRepository.load(email);
+		throwExceptionIfNotFound(user, email);
+		return new AuthenticationUserDetails(user);
+	}
 
-    private void throwExceptionIfNotFound(User user, String email) {
-        if (user == null) {
-            throw new UsernameNotFoundException("User with email " + email + "  has not been found.");
-        }
-    }
+	private void throwExceptionIfNotFound(User user, String email) {
+		if (user == null) {
+			throw new UsernameNotFoundException("User with email " + email + "  has not been found.");
+		}
+	}
 }
