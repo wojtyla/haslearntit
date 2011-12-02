@@ -1,12 +1,20 @@
 package it.haslearnt.entry;
 
+import it.haslearnt.cassandra.mapping.Column;
+import it.haslearnt.cassandra.mappings.Id;
+
 import org.scale7.cassandra.pelops.UuidHelper;
 
 public class Entry {
 
-	private String skill;
+	@Id
 	private String id;
+
+	@Column("skill")
+	private String skill;
+	@Column("when")
 	private String when;
+	@Column("difficulty")
 	private String difficulty;
 
 	public String id() {

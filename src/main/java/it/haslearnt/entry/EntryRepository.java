@@ -2,7 +2,10 @@ package it.haslearnt.entry;
 
 import static org.scale7.cassandra.pelops.Selector.getColumnStringName;
 import static org.scale7.cassandra.pelops.Selector.getColumnStringValue;
+import it.haslearnt.cassandra.mappings.Id;
 
+import java.lang.reflect.Field;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.cassandra.thrift.Column;
@@ -22,10 +25,28 @@ public class EntryRepository {
 	public void save(Entry entry) {
 		Mutator mutator = pool.createMutator();
 		entry.generateId();
-		mutator.writeColumns("Entries", entry.id(), mutator.newColumnList(
-				mutator.newColumn("iveLearnt", entry.what()),
-				mutator.newColumn("when", entry.when()),
-				mutator.newColumn("difficulty", entry.howDifficult())));
+
+		List<Column> columns = new LinkedList<Column>();
+		Object id = null;
+		try {
+			Field[] fields = Entry.class.getDeclaredFields();
+			for (Field field : fields) {
+				field.setAccessible(true);
+				if (field.isAnnotationPresent(Id.class))
+					id = field.get(entry);
+				else if (field.isAnnotationPresent(it.haslearnt.cassandra.mapping.Column.class)) {
+					columns.add(
+							mutator.newColumn(field.getAnnotation(it.haslearnt.cassandra.mapping.Column.class).value(), field.get(entry)
+									.toString())
+							);
+				}
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("Problem with Cassandra mapping", e);
+		}
+
+		mutator.writeColumns("Entries", id.toString(), columns);
+
 		mutator.execute(ConsistencyLevel.ONE);
 	}
 
@@ -36,7 +57,7 @@ public class EntryRepository {
 		Entry result = new Entry();
 
 		for (Column column : columns) {
-			if ("iveLearnt".equals(getColumnStringName(column)))
+			if ("skill".equals(getColumnStringName(column)))
 				result.iveLearnt(getColumnStringValue(column));
 			else if ("when".equals(getColumnStringName(column)))
 				result.today();
