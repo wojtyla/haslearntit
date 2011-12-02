@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-2.5.xsd">
     <bean id="plainOldJavaObject" class="it.haslearnt.aspects.PlainOldJavaObject"/>
     <bean id="simpleDto" class="it.haslearnt.aspects.SimpleDto"/>
 
     <!-- embedded cassandra -->
+    
 
     <bean id="cassandraStarter" class="setup.EmbeddedCassandraStarter">
         <constructor-arg index="0">
@@ -16,4 +20,5 @@
 
     <bean id="cassandra" factory-bean="cassandraStarter" factory-method="startNewCassandra"/>
 
+    <context:component-scan base-package="it.haslearnt.entry" />
 </beans>

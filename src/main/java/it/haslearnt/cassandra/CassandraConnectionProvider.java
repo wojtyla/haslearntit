@@ -9,23 +9,24 @@ import org.scale7.cassandra.pelops.spring.CommonsBackedPoolFactoryBean;
 
 public class CassandraConnectionProvider extends CommonsBackedPoolFactoryBean {
 
-    private boolean clean = false;
+	private boolean clean = false;
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        CassandraKeyspaceManager.ensureKeyspace(getCluster(), getKeyspace());
-        if(clean) {
-            CassandraColumnFamilyManager.recreateColumnFamily(getCluster(), getKeyspace(), "Notes", "LongType");
-            CassandraColumnFamilyManager.recreateColumnFamily(getCluster(), getKeyspace(), CassandraColumnFamilies.USERS, "UTF8Type");
-        } else {
-            CassandraColumnFamilyManager.addColumnFamilyIfNeeded(getCluster(), getKeyspace(), "Notes", "LongType");
-            CassandraColumnFamilyManager.addColumnFamilyIfNeeded(getCluster(), getKeyspace(), CassandraColumnFamilies.USERS, "UTF8Type");
-        }
-        super.afterPropertiesSet();
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		CassandraKeyspaceManager.ensureKeyspace(getCluster(), getKeyspace());
+		if (clean) {
+			CassandraColumnFamilyManager.recreateColumnFamily(getCluster(), getKeyspace(), "Notes", "LongType");
+			CassandraColumnFamilyManager.recreateColumnFamily(getCluster(), getKeyspace(), "Entries", "UTF8Type");
+			CassandraColumnFamilyManager.recreateColumnFamily(getCluster(), getKeyspace(), CassandraColumnFamilies.USERS, "UTF8Type");
+		} else {
+			CassandraColumnFamilyManager.addColumnFamilyIfNeeded(getCluster(), getKeyspace(), "Notes", "LongType");
+			CassandraColumnFamilyManager.addColumnFamilyIfNeeded(getCluster(), getKeyspace(), "Entries", "UTF8Type");
+			CassandraColumnFamilyManager.addColumnFamilyIfNeeded(getCluster(), getKeyspace(), CassandraColumnFamilies.USERS, "UTF8Type");
+		}
+		super.afterPropertiesSet();
+	}
 
-
-    public void setClean(boolean clean) {
-        this.clean = clean;
-    }
+	public void setClean(boolean clean) {
+		this.clean = clean;
+	}
 }
