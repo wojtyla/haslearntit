@@ -5,8 +5,9 @@
 
 package it.haslearnt.security;
 
-import it.haslearnt.model.User;
-import it.haslearnt.repositories.UserRepository;
+import it.haslearnt.user.User;
+import it.haslearnt.user.UserRepository;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

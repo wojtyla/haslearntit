@@ -3,7 +3,7 @@
  * In short: You just DO WHAT THE FUCK YOU WANT TO.
  */
 
-package it.haslearnt.model;
+package it.haslearnt.user;
 
 public class User {
     private String email;

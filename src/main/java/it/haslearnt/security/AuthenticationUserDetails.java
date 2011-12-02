@@ -5,7 +5,8 @@
 
 package it.haslearnt.security;
 
-import it.haslearnt.model.User;
+import it.haslearnt.user.User;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

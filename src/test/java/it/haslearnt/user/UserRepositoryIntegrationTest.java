@@ -3,10 +3,12 @@
  * In short: You just DO WHAT THE FUCK YOU WANT TO.
  */
 
-package it.haslearnt.repositories;
+package it.haslearnt.user;
 
 import it.haslearnt.cassandra.CassandraColumnFamilies;
-import it.haslearnt.model.User;
+import it.haslearnt.user.User;
+import it.haslearnt.user.UserRepository;
+
 import org.apache.cassandra.thrift.Column;
 import org.apache.cassandra.thrift.ConsistencyLevel;
 import org.junit.Test;
