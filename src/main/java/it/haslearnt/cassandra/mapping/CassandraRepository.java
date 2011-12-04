@@ -3,25 +3,23 @@ package it.haslearnt.cassandra.mapping;
 import static org.scale7.cassandra.pelops.Selector.getColumnStringName;
 import static org.scale7.cassandra.pelops.Selector.getColumnStringValue;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.util.List;
+import java.lang.reflect.*;
+import java.util.*;
 
+import org.apache.cassandra.thrift.*;
 import org.apache.cassandra.thrift.Column;
-import org.apache.cassandra.thrift.ConsistencyLevel;
-import org.scale7.cassandra.pelops.Mutator;
-import org.scale7.cassandra.pelops.Selector;
-import org.scale7.cassandra.pelops.pool.IThriftPool;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.scale7.cassandra.pelops.*;
+import org.scale7.cassandra.pelops.pool.*;
+import org.springframework.beans.factory.annotation.*;
 
-public class CassandraRepository<ENTITY extends CassandraEntity> extends CassandraMapper {
+public class CassandraRepository<ENTITY> extends CassandraMapper {
 
 	@Autowired
 	protected IThriftPool pool;
 
 	public void save(ENTITY entity) {
-		if (entity.id() == null)
-			entity.generateId();
+		if (entityId(entity) == null)
+			generateIdOrThrowException(entity);
 
 		Mutator mutator = pool.createMutator();
 
@@ -38,29 +36,48 @@ public class CassandraRepository<ENTITY extends CassandraEntity> extends Cassand
 		mutator.execute(ConsistencyLevel.ONE);
 	}
 
+	private void generateIdOrThrowException(ENTITY entity) {
+		try {
+			entity.getClass().getMethod("generateId", null).invoke(entity);
+		} catch (Exception e) {
+			throw new RuntimeException("The entity of class " + entity.getClass().getName() + "(" + entity.toString()
+					+ ") has no id assigned, and has no generateId method.");
+		}
+	}
+
 	public ENTITY load(String entityId) {
+		List<Column> entityColumns = fetchColumnsForId(entityId);
+		if (entityColumns == null || entityColumns.isEmpty())
+			return null;
+
 		ENTITY result = instantiateENTITY();
 
-		mapColumnsToFields(result, fetchColumnsForId(entityId));
+		mapColumnsToFields(result, entityColumns);
+		setId(result, entityId);
 
 		return result;
 	}
 
-	private void mapColumnsToFields(ENTITY result, List<Column> columns) {
-		for (Column column : columns) {
-			List<Field> entityColumns = getFieldsAnnotatedBy(it.haslearnt.cassandra.mapping.Column.class, result.getClass());
+	private void setId(ENTITY entity, String entityId) {
+		for (EntityField field : getFieldsAnnotatedBy(Id.class, entity.getClass()))
+			field.setValueFor(entity, entityId);
+	}
 
-			for (Field field : entityColumns) {
-				if (field.getAnnotation(it.haslearnt.cassandra.mapping.Column.class).value().equals(getColumnStringName(column)))
-					try {
-						field.setAccessible(true);
-						field.set(result, getColumnStringValue(column));
-					} catch (Exception e) {
-						throw new RuntimeException("Entity mapping problem for " + result.getClass().getName() + " field: "
-								+ field.getName(), e);
-					}
-			}
-		}
+	private void mapColumnsToFields(ENTITY entity, List<Column> cassandraColumns) {
+		for (Column column : cassandraColumns)
+			mapColumnToMatchingEntityField(entity, column);
+	}
+
+	private void mapColumnToMatchingEntityField(ENTITY entity, Column column) {
+		List<EntityField> entityColumns = getFieldsAnnotatedBy(it.haslearnt.cassandra.mapping.Column.class, entity.getClass());
+
+		for (EntityField field : entityColumns)
+			if (fieldIsAnnotatedWithThisColumn(column, field, entity))
+				field.setValueFor(entity, getColumnStringValue(column));
+	}
+
+	private boolean fieldIsAnnotatedWithThisColumn(Column column, EntityField field, ENTITY entity) {
+		return field.getAnnotationValue(it.haslearnt.cassandra.mapping.Column.class, entity).equals(getColumnStringName(column));
 	}
 
 	private List<Column> fetchColumnsForId(String entityId) {
@@ -79,5 +96,4 @@ public class CassandraRepository<ENTITY extends CassandraEntity> extends Cassand
 					+ ((Class<ENTITY>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]).getName(), e);
 		}
 	}
-
 }

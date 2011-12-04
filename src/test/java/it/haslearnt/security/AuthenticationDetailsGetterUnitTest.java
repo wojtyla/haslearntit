@@ -8,15 +8,14 @@ package it.haslearnt.security;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
+import it.haslearnt.user.*;
 import it.haslearnt.user.User;
-import it.haslearnt.user.UserRepository;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.junit.*;
+import org.junit.runner.*;
+import org.mockito.*;
+import org.mockito.runners.*;
+import org.springframework.security.core.userdetails.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AuthenticationDetailsGetterUnitTest {
@@ -31,7 +30,7 @@ public class AuthenticationDetailsGetterUnitTest {
 	public void shouldLoadUserByUsername() {
 		// given
 		AuthenticationDetailsGetter authenticationDetailsGetter = new AuthenticationDetailsGetter(userRepository);
-		User user = new User(email, hashedPassword);
+		User user = new User().withEmail(email).withPassword(hashedPassword);
 		given(userRepository.load(email)).willReturn(user);
 
 		// when

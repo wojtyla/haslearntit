@@ -5,32 +5,30 @@
 
 package it.haslearnt.user;
 
-import it.haslearnt.cassandra.mapping.CassandraEntity;
-import it.haslearnt.cassandra.mapping.Column;
-import it.haslearnt.cassandra.mapping.Entity;
-import it.haslearnt.cassandra.mapping.Id;
+import it.haslearnt.cassandra.mapping.*;
 
 @Entity("Users")
-public class User extends CassandraEntity {
+public class User {
 	@Id
 	private String email;
 	@Column("hashedPassword")
 	private String hashedPassword;
 
-	public User(String email, String hashedPassword) {
-		this.email = email;
-		this.hashedPassword = hashedPassword;
-	}
-
-	public String getEmail() {
+	public String email() {
 		return email;
 	}
 
-	public String getHashedPassword() {
+	public String password() {
 		return hashedPassword;
 	}
 
-	public void setHashedPassword(String hashedPassword) {
-		this.hashedPassword = hashedPassword;
+	public User withEmail(String email) {
+		this.email = email;
+		return this;
+	}
+
+	public User withPassword(String password) {
+		this.hashedPassword = password;
+		return this;
 	}
 }

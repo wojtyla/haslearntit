@@ -5,9 +5,9 @@
 
 package it.haslearnt.user;
 
-import it.haslearnt.cassandra.mapping.CassandraRepository;
+import it.haslearnt.cassandra.mapping.*;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.*;
 
 @Repository
 public class UserRepository extends CassandraRepository<User> {

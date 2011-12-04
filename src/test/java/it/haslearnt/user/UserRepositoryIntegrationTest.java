@@ -5,14 +5,12 @@
 
 package it.haslearnt.user;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.*;
+import org.springframework.beans.factory.annotation.*;
 
-import setup.IntegrationTest;
+import setup.*;
 
 public class UserRepositoryIntegrationTest extends IntegrationTest {
 	@Autowired
@@ -22,37 +20,33 @@ public class UserRepositoryIntegrationTest extends IntegrationTest {
 	String hashedPassword = "897y6euivbh";
 
 	@Test
-	public void shouldSaveUser() {
-		// given
-		User user = new User(email, hashedPassword);
+	public void shouldSaveAndLoadUser() {
+		User user = new User().withEmail(email).withPassword(hashedPassword);
 
-		// when
 		userRepository.save(user);
 
-		// then
-		User loadedUser = userRepository.load(email);
+		User loadedUser = userRepository.load(user.email());
 		assertNotNull(loadedUser);
-		assertEquals(email, loadedUser.getEmail());
-		assertEquals(hashedPassword, loadedUser.getHashedPassword());
+		assertEquals(email, loadedUser.email());
+		assertEquals(hashedPassword, loadedUser.password());
 	}
 
 	@Test
 	public void saveShouldAlsoUpdate() {
-		// given
-		User user = new User(email, hashedPassword);
-		String newPassword = "something completely different";
-
-		// when
+		User user = new User().withEmail(email).withPassword(hashedPassword);
 		userRepository.save(user);
-		user.setHashedPassword(newPassword);
-		userRepository.save(user);
+		String oldId = user.email();
 
-		// then
-		// assertEquals(1, userRepository.loadAll(email).size());
+		userRepository.save(user.withPassword("NEW PASSWORD"));
+
+		String newId = user.email();
+		assertTrue(oldId == newId);
+		assertEquals("NEW PASSWORD", userRepository.load(newId).password());
 	}
 
-	public void findByEmailShouldThrowExceptionIfNotFound() {
-		User user = userRepository.load(email);
+	@Test
+	public void findByIdShouldThrowExceptionIfNotFound() {
+		User user = userRepository.load("NONEXISTENT ID");
 
 		assertNull(user);
 	}

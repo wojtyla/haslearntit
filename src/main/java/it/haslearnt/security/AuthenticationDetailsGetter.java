@@ -6,13 +6,11 @@
 package it.haslearnt.security;
 
 import static org.springframework.util.Assert.notNull;
+import it.haslearnt.user.*;
 import it.haslearnt.user.User;
-import it.haslearnt.user.UserRepository;
 
-import org.springframework.dao.DataAccessException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.dao.*;
+import org.springframework.security.core.userdetails.*;
 
 public class AuthenticationDetailsGetter implements UserDetailsService {
 	private UserRepository userRepository;

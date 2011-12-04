@@ -21,8 +21,8 @@ public class AuthenticationUserDetails implements UserDetails {
     private HashSet<GrantedAuthority> grantedAuthorities = new HashSet<GrantedAuthority>();
 
     public AuthenticationUserDetails(User user) {
-        this.login = user.getEmail();
-        this.passwordHash = user.getHashedPassword();
+        this.login = user.email();
+        this.passwordHash = user.password();
         this.enabled = true;
         this.grantedAuthorities.addAll(new HashSet<GrantedAuthority>());
     }
