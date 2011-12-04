@@ -48,7 +48,7 @@ public class AuthenticationDetailsGetterUnitTest {
 		AuthenticationDetailsGetter authenticationDetailsGetter = new AuthenticationDetailsGetter(userRepository);
 
 		// when
-		UserDetails userDetails = authenticationDetailsGetter.loadUserByUsername(email);
+		authenticationDetailsGetter.loadUserByUsername(email);
 
 		// then exception is thrown
 	}

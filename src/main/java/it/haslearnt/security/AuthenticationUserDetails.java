@@ -7,62 +7,61 @@ package it.haslearnt.security;
 
 import it.haslearnt.user.User;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import java.util.*;
 
-import java.util.Collection;
-import java.util.HashSet;
+import org.springframework.security.core.*;
+import org.springframework.security.core.userdetails.*;
 
+@SuppressWarnings("serial")
 public class AuthenticationUserDetails implements UserDetails {
-    private Long id;
-    private final String login;
-    private final String passwordHash;
-    private final boolean enabled;
-    private HashSet<GrantedAuthority> grantedAuthorities = new HashSet<GrantedAuthority>();
+	private final String login;
+	private final String passwordHash;
+	private final boolean enabled;
+	private HashSet<GrantedAuthority> grantedAuthorities = new HashSet<GrantedAuthority>();
 
-    public AuthenticationUserDetails(User user) {
-        this.login = user.email();
-        this.passwordHash = user.password();
-        this.enabled = true;
-        this.grantedAuthorities.addAll(new HashSet<GrantedAuthority>());
-    }
+	public AuthenticationUserDetails(User user) {
+		this.login = user.email();
+		this.passwordHash = user.password();
+		this.enabled = true;
+		this.grantedAuthorities.addAll(new HashSet<GrantedAuthority>());
+	}
 
-    @Override
-    public Collection<GrantedAuthority> getAuthorities() {
-        return grantedAuthorities;
-    }
+	@Override
+	public Collection<GrantedAuthority> getAuthorities() {
+		return grantedAuthorities;
+	}
 
-    @Override
-    public String getPassword() {
-        return passwordHash;
-    }
+	@Override
+	public String getPassword() {
+		return passwordHash;
+	}
 
-    @Override
-    public String getUsername() {
-        return login;
-    }
+	@Override
+	public String getUsername() {
+		return login;
+	}
 
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
+	@Override
+	public boolean isEnabled() {
+		return enabled;
+	}
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
 
-    public String getLogin() {
-        return login;
-    }
+	public String getLogin() {
+		return login;
+	}
 }

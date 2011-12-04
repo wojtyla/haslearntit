@@ -38,7 +38,7 @@ public class CassandraRepository<ENTITY> extends CassandraMapper {
 
 	private void generateIdOrThrowException(ENTITY entity) {
 		try {
-			entity.getClass().getMethod("generateId", null).invoke(entity);
+			entity.getClass().getMethod("generateId").invoke(entity);
 		} catch (Exception e) {
 			throw new RuntimeException("The entity of class " + entity.getClass().getName() + "(" + entity.toString()
 					+ ") has no id assigned, and has no generateId method.");
