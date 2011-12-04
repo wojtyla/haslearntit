@@ -1,11 +1,11 @@
 package it.haslearnt.entry;
 
-import it.haslearnt.cassandra.mapping.CassandraEntity;
+import it.haslearnt.cassandra.mapping.EntityWithGeneratedId;
 import it.haslearnt.cassandra.mapping.Column;
 import it.haslearnt.cassandra.mapping.Entity;
 
 @Entity("Entries")
-public class Entry extends CassandraEntity {
+public class Entry extends EntityWithGeneratedId {
 
 	@Column("skill")
 	private String skill;

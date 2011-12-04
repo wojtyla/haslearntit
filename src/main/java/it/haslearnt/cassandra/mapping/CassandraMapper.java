@@ -31,7 +31,7 @@ public class CassandraMapper {
 
 	@SuppressWarnings("unchecked")
 	protected String entityName() {
-		Class<? extends CassandraEntity> entityClass = (Class<? extends CassandraEntity>) ((ParameterizedType) getClass()
+		Class<? extends EntityWithGeneratedId> entityClass = (Class<? extends EntityWithGeneratedId>) ((ParameterizedType) getClass()
 				.getGenericSuperclass()).getActualTypeArguments()[0];
 		if (entityClass.isAnnotationPresent(Entity.class))
 			return entityClass.getAnnotation(Entity.class).value();

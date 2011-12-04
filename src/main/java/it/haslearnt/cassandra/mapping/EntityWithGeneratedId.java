@@ -2,7 +2,7 @@ package it.haslearnt.cassandra.mapping;
 
 import org.scale7.cassandra.pelops.UuidHelper;
 
-public class CassandraEntity {
+public class EntityWithGeneratedId {
 
 	@Id
 	protected String id;
@@ -15,7 +15,7 @@ public class CassandraEntity {
 		this.id = UuidHelper.newTimeUuid().toString();
 	}
 
-	public CassandraEntity withId(String entryId) {
+	public EntityWithGeneratedId withId(String entryId) {
 		this.id = entryId;
 		return this;
 	}
