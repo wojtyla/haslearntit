@@ -11,7 +11,7 @@ import it.haslearnt.cassandra.mapping.*;
 public class User {
 	@Id
 	private String email;
-	@Column("hashedPassword")
+	@Column
 	private String hashedPassword;
 
 	public String email() {
