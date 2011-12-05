@@ -40,10 +40,14 @@ public class CassandraMapper {
 	protected String entityName() {
 		Class<? extends EntityWithGeneratedId> entityClass = (Class<? extends EntityWithGeneratedId>) ((ParameterizedType) getClass()
 				.getGenericSuperclass()).getActualTypeArguments()[0];
-		if (entityClass.isAnnotationPresent(Entity.class))
+		if (annotationHasEntityName(entityClass))
 			return entityClass.getAnnotation(Entity.class).value();
 
 		return entityClass.getSimpleName();
+	}
+
+	private boolean annotationHasEntityName(Class<? extends EntityWithGeneratedId> entityClass) {
+		return entityClass.isAnnotationPresent(Entity.class) && !"".equals(entityClass.getAnnotation(Entity.class).value());
 	}
 
 	protected List<EntityField> getFieldsAnnotatedBy(Class<? extends Annotation> annotation, Class<?> clazz) {
