@@ -13,6 +13,8 @@ public class User {
 	private String email;
 	@Column
 	private String hashedPassword;
+	@Column
+	private String name;
 
 	public String email() {
 		return email;
@@ -31,4 +33,15 @@ public class User {
 		this.hashedPassword = password;
 		return this;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public User withName(String name) {
+		this.name = name;
+		return this;
+	}
+	
+	
 }
